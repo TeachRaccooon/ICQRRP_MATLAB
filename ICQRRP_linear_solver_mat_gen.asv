@@ -1,0 +1,381 @@
+%Matrices from https://www.imm.dtu.dk/~pcha/Regutools/
+function[] = gen_mat()
+
+    m = 2^16;
+    n = 61440;
+
+    [A1,b1,x1] = baart(m);
+    A1 = A1(:, 1:n);
+    x1((n+1):m, :) = 0;
+    A1 = [A1, x1, b1];
+    writematrix(A1               , 'ICQRRP_linear_solver_data/baart_A.txt','delimiter',' ');
+    fprintf("Done with Mat1\n");
+
+    [A2,b2,x2] = blur(m);
+    A2 = A2(:, 1:n);
+    x1((n+1):m, :) = 0;
+    A1 = [A1, x1, b1];
+    writematrix(A2               , 'ICQRRP_linear_solver_data/blur_A.txt','delimiter',' ');
+    writematrix(b2               , 'ICQRRP_linear_solver_data/blur_b.txt','delimiter',' ');
+    writematrix(x2               , 'ICQRRP_linear_solver_data/blur_x.txt','delimiter',' ');
+    fprintf("Done with Mat2\n");
+
+    [A3,b3,x3] = deriv2(m);
+    A1 = A1(:, 1:n);
+    x1((n+1):m, :) = 0;
+    A1 = [A1, x1, b1];
+    writematrix(A3               , 'ICQRRP_linear_solver_data/deriv2_A.txt','delimiter',' ');
+    writematrix(b3               , 'ICQRRP_linear_solver_data/deriv2_b.txt','delimiter',' ');
+    writematrix(x3               , 'ICQRRP_linear_solver_data/deriv2_x.txt','delimiter',' ');
+    fprintf("Done with Mat3\n");
+
+    [A4,b4,x4] = foxgood(m);
+    A1 = A1(:, 1:n);
+    x1((n+1):m, :) = 0;
+    A1 = [A1, x1, b1];
+    writematrix(A4               , 'ICQRRP_linear_solver_data/foxgood_A.txt','delimiter',' ');
+    writematrix(b4               , 'ICQRRP_linear_solver_data/foxgood_b.txt','delimiter',' ');
+    writematrix(x4               , 'ICQRRP_linear_solver_data/foxgood_x.txt','delimiter',' ');
+    fprintf("Done with Mat4\n");
+
+    [A5,b5,x5] = gravity(m);
+    A1 = A1(:, 1:n);
+    x1((n+1):m, :) = 0;
+    A1 = [A1, x1, b1];
+    writematrix(A5               , 'ICQRRP_linear_solver_data/gravity_A.txt','delimiter',' ');
+    writematrix(b5               , 'ICQRRP_linear_solver_data/gravity_b.txt','delimiter',' ');
+    writematrix(x5               , 'ICQRRP_linear_solver_data/gravity_x.txt','delimiter',' ');
+    fprintf("Done with Mat5\n");
+end
+
+%-------------------------------------------------------------------------%
+function [A,b,x] = baart(n)
+    %BAART Test problem: Fredholm integral equation of the first kind.
+    %
+    % [A,b,x] = baart(n)
+    %
+    % Discretization of a first-kind Fredholm integral equation with
+    % kernel K and right-hand side g given by
+    %    K(s,t) = exp(s*cos(t)) ,  g(s) = 2*sinh(s)/s ,
+    % and with integration intervals  s in [0,pi/2] ,  t in [0,pi] .
+    % The solution is given by
+    %    f(t) = sin(t) .
+    %
+    % The order n must be even.
+    
+    % Reference: M. L. Baart, "The use of auto-correlation for pseudo-
+    % rank determination in noisy ill-conditioned linear least-squares
+    % problems", IMA J. Numer. Anal. 2 (1982), 241-247.
+    
+    % Discretized by the Galerkin method with orthonormal box functions;
+    % one integration is exact, the other is done by Simpson's rule.
+    
+    % Per Christian Hansen, IMM, 09/16/92.
+    
+    % Check input.
+    if (rem(n,2)~=0), error('The order n must be even'), end
+    
+    % Generate the matrix.
+    hs = pi/(2*n); ht = pi/n; c = 1/(3*sqrt(2));
+    A = zeros(n,n); ihs = (0:n)'*hs; n1 = n+1; nh = n/2;
+    f3 = exp(ihs(2:n1)) - exp(ihs(1:n));
+    for j=1:n
+      f1 = f3; co2 = cos((j-.5)*ht); co3 = cos(j*ht);
+      f2 = (exp(ihs(2:n1)*co2) - exp(ihs(1:n)*co2))/co2;
+      if (j==nh)
+        f3 = hs*ones(n,1);
+      else
+        f3 = (exp(ihs(2:n1)*co3) - exp(ihs(1:n)*co3))/co3;
+      end
+      A(:,j) = c*(f1 + 4*f2 + f3);
+    end
+    
+    % Generate the right-hand side.
+    if (nargout>1)
+      si(1:2*n) = (.5:.5:n)'*hs; si = sinh(si)./si;
+      b = zeros(n,1);
+      b(1) = 1 + 4*si(1) + si(2);
+      b(2:n) = si(2:2:2*n-2) + 4*si(3:2:2*n-1) + si(4:2:2*n);
+      b = b*sqrt(hs)/3;
+    end
+    
+    % Generate the solution.
+    if (nargout==3)
+      x = -diff(cos((0:n)'*ht))/sqrt(ht);
+    end
+end
+%-------------------------------------------------------------------------%
+
+%-------------------------------------------------------------------------%
+function [A,b,x] = blur(N,band,sigma)
+    %BLUR Test problem: digital image deblurring.
+    %
+    % function [A,b,x] = blur(N,band,sigma)
+    %
+    % The matrix A is an N*N-by-N*N symmetric, doubly block Toeplitz matrix that
+    % models blurring of an N-by-N image by a Gaussian point spread function.
+    % It is stored in sparse matrix format.
+    %
+    % In each Toeplitz block, only matrix elements within a distance band-1
+    % from the diagonal are nonzero (i.e., band is the half-bandwidth).
+    % If band is not specified, band = 3 is used.
+    %
+    % The parameter sigma controls the width of the Gaussian point spread
+    % function and thus the amount of smoothing (the larger the sigma, the wider
+    % the function and the more ill posed the problem).  If sigma is not
+    % specified, sigma = 0.7 is used.
+    %
+    % The vector x is a columnwise stacked version of a simple test image, while
+    % b holds a columnwise stacked version of the blurrred image; i.e, b = A*x.
+    
+    % Per Christian Hansen, IMM, 11/11/97.
+    
+    % Initialization.
+    if (nargin < 2), band = 3; end
+    band = min(band,N);
+    if (nargin < 3), sigma = 0.7; end
+    
+    % Construct the matrix as a Kronecker product.
+    z = [exp(-((0:band-1).^2)/(2*sigma^2)),zeros(1,N-band)];
+    A = toeplitz(z);
+    A = sparse(A);
+    A = (1/(2*pi*sigma^2))*kron(A,A);
+    
+    % Generate x and b, if required.
+    if (nargout > 1)
+    
+      % Start with an image of all zeros.
+      x = zeros(N,N);
+      N2 = round(N/2);
+      N3= round(N/3);
+      N6 = round(N/6);
+      N12 = round(N/12);
+    
+      % Add a large ellipse.
+      T = zeros(N6,N3);
+      for i=1:N6
+        for j=1:N3
+          if ( (i/N6)^2 + (j/N3)^2 < 1 ), T(i,j) = 1; end
+        end
+      end
+      T = [fliplr(T),T];
+      T = [flipud(T);T];
+      x(2+(1:2*N6),N3-1+(1:2*N3)) = T;
+    
+      % Add a smaller ellipse.
+      T = zeros(N6,N3);
+      for i=1:N6
+        for j=1:N3
+          if ( (i/N6)^2 + (j/N3)^2 < 0.6 ), T(i,j) = 1; end
+        end
+      end
+      T = [fliplr(T),T];
+      T = [flipud(T);T];
+      x(N6+(1:2*N6),N3-1+(1:2*N3)) = x(N6+(1:2*N6),N3-1+(1:2*N3)) + 2*T;
+      % Correct for overlap.
+      f = find(x==3);
+      x(f) = 2*ones(size(f));
+    
+      % Add a triangle.
+      T = triu(ones(N3,N3));
+      [mT,nT] = size(T);
+      x(N3+N12+(1:nT),1+(1:mT)) = 3*T;
+    
+      % Add a cross.
+      T = zeros(2*N6+1,2*N6+1);
+      [mT,nT] = size(T);
+      T(N6+1,1:nT) = ones(1,nT);
+      T(1:mT,N6+1) = ones(mT,1);
+      x(N2+N12+(1:mT),N2+(1:nT)) = 4*T;
+    
+      % Make sure x is N-times-N, and stack the columns of x.
+      x = reshape(x(1:N,1:N),N^2,1);
+    
+      % Compute the blurred image.
+      b = A*x;
+    end
+end
+%-------------------------------------------------------------------------%
+
+%-------------------------------------------------------------------------%
+function [A,b,x] = deriv2(n,example)
+    %DERIV2 Test problem: computation of the second derivative.
+    %
+    % [A,b,x] = deriv2(n,example)
+    %
+    % This is a mildly ill-posed problem.  It is a discretization of a
+    % first kind Fredholm integral equation whose kernel K is the
+    % Green's function for the second derivative:
+    %    K(s,t) = | s(t-1)  ,  s <  t .
+    %             | t(s-1)  ,  s >= t
+    % Both integration intervals are [0,1], and as right-hand side g
+    % and correspond solution f one can choose between the following:
+    %    example = 1 : g(s) = (s^3 - s)/6          ,  f(t) = t
+    %    example = 2 : g(s) = exp(s) + (1-e)s - 1  ,  f(t) = exp(t)
+    %    example = 3 : g(s) = | (4s^3 - 3s)/24               ,  s <  0.5
+    %                         | (-4s^3 + 12s^2 - 9s + 1)/24  ,  s >= 0.5
+    %                  f(t) = | t    ,  t <  0.5
+    %                         | 1-t  ,  t >= 0.5
+    
+    % References.  The first two examples are from L. M. Delves & J. L.
+    % Mohamed, "Computational Methods for Integral Equations", Cambridge
+    % University Press, 1985; p. 310.  The third example is from A. K.
+    % Louis and P. Maass, "A mollifier method for linear operator equations
+    % of the first kind", Inverse Problems 6 (1990), 427-440.
+    
+    % Discretized by the Galerkin method with orthonormal box functions.
+    
+    % Per Christian Hansen, IMM, 04/21/97.
+    
+    % Initialization.
+    if (nargin==1), example = 1; end
+    h = 1/n; sqh = sqrt(h); h32 = h*sqh; h2 = h^2; sqhi = 1/sqh;
+    t = 2/3; A = zeros(n,n);
+    
+    % Compute the matrix A.
+    for i=1:n
+      A(i,i) = h2*((i^2 - i + 0.25)*h - (i - t));
+      for j=1:i-1
+        A(i,j) = h2*(j-0.5)*((i-0.5)*h-1);
+      end
+    end
+    A = A + tril(A,-1)';
+    
+    % Compute the right-hand side vector b.
+    if (nargout>1)
+      b = zeros(n,1);
+      if (example==1)
+        for i=1:n
+          b(i) = h32*(i-0.5)*((i^2 + (i-1)^2)*h2/2 - 1)/6;
+        end
+      elseif (example==2)
+        ee = 1 - exp(1);
+        for i=1:n
+          b(i) = sqhi*(exp(i*h) - exp((i-1)*h) + ee*(i-0.5)*h2 - h);
+        end
+      elseif (example==3)
+        if (rem(n,2)~=0), error('Order n must be even'), else
+          for i=1:n/2
+            s12 = (i*h)^2; s22 = ((i-1)*h)^2;
+            b(i) = sqhi*(s12 + s22 - 1.5)*(s12 - s22)/24;
+          end
+          for i=n/2+1:n
+            s1 = i*h; s12 = s1^2; s2 = (i-1)*h; s22 = s2^2;
+            b(i) = sqhi*(-(s12+s22)*(s12-s22) + 4*(s1^3 - s2^3) - ...
+                        4.5*(s12 - s22) + h)/24;
+          end
+        end
+      else
+        error('Illegal value of example')
+      end
+    end
+    
+    % Compute the solution vector x.
+    if (nargout==3)
+      x = zeros(n,1);
+      if (example==1)
+        for i=1:n, x(i) = h32*(i-0.5); end
+      elseif(example==2)
+        for i=1:n, x(i) = sqhi*(exp(i*h) - exp((i-1)*h)); end
+      else
+        for i=1:n/2,   x(i) = sqhi*((i*h)^2 - ((i-1)*h)^2)/2; end
+        for i=n/2+1:n, x(i) = sqhi*(h - ((i*h)^2 - ((i-1)*h)^2)/2); end
+      end
+    end
+end
+%-------------------------------------------------------------------------%
+
+%-------------------------------------------------------------------------%
+function [A,b,x] = foxgood(n)
+    %FOXGOOD Test problem: severely ill-posed problem.
+    %
+    % [A,b,x] = foxgood(n)
+    %
+    % This is a model problem which does not satisfy the
+    % discrete Picard condition for the small singular values.
+    % The problem was first used by Fox & Goodwin.
+    
+    % Reference: C. T. H. Baker, "The Numerical Treatment of
+    % Integral Equations", Clarendon Press, Oxford, 1977; p. 665.
+    
+    % Discretized by simple quadrature (midpoint rule).
+    
+    % Per Christian Hansen, IMM, 03/16/93.
+    
+    % Initialization.
+    h = 1/n; t = h*((1:n)' - 0.5);
+    
+    A = h*sqrt((t.^2)*ones(1,n) + ones(n,1)*(t.^2)');
+    x = t; b = ((1+t.^2).^1.5 - t.^3)/3;
+end
+%-------------------------------------------------------------------------%
+
+%-------------------------------------------------------------------------%
+function [A,b,x] = gravity(n,example,a,b,d)
+    %GRAVITY Test problem: 1-D gravity surveying model problem
+    %
+    % [A,b,x] = gravity(n,example,a,b,d)
+    %
+    % Discretization of a 1-D model problem in gravity surveying, in which
+    % a mass distribution f(t) is located at depth d, while the vertical
+    % component of the gravity field g(s) is measured at the surface.
+    %
+    % The resulting problem is a first-kind Fredholm integral equation
+    % with kernel
+    %    K(s,t) = d*(d^2 + (s-t)^2)^(-3/2) .
+    % The following three examples are implemented (example = 1 is default):
+    %    1: f(t) = sin(pi*t) + 0.5*sin(2*pi*t),
+    %    2: f(t) = piecewise linear function,
+    %    3: f(t) = piecewise constant function.
+    % The problem is discretized by means of the midpoint quadrature rule
+    % with n points, leading to the matrix A and the vector x.  Then the
+    % right-hand side is computed as b = A*x.
+    %
+    % The t integration interval is fixed to [0,1], while the s integration
+    % interval [a,b] can be specified by the user. The default interval is
+    % [0,1], leading to a symmetric Toeplitz matrix.
+    %
+    % The parameter d is the depth at which the magnetic deposit is located,
+    % and the default value is d = 0.25. The larger the d, the faster the
+    % decay of the singular values.
+    
+    % Reference: G. M. Wing and J. D. Zahrt, "A Primer on Integral Equations
+    % of the First Kind", SIAM, Philadelphia, 1991; p. 17.
+    
+    % Per Christian Hansen, IMM, November 18, 2001.
+    
+    % Initialization.
+    if (nargin<2), example = 1; end
+    if (nargin<4), a = 0; b = 1; end
+    if (nargin<5), d = 0.25; end
+    if isempty(example), example = 1; end
+    if isempty(a), a = 0; end
+    if isempty(b), b = 1; end
+    
+    % Set up abscissas and matrix.
+    dt = 1/n;
+    ds = (b-a)/n;
+    t = dt*((1:n)' - 0.5);
+    s = a + ds*((1:n)' - 0.5);
+    [T,S] = meshgrid(t,s);
+    A = dt*d*ones(n,n)./(d^2 + (S-T).^2).^(3/2);
+    
+    % Set up solution vector and right-hand side.
+    nt = round(n/3);
+    nn = round(n*7/8);
+    x = ones(n,1);
+    switch example
+    case 1
+       x = sin(pi*t) + 0.5*sin(2*pi*t);
+    case 2
+       x(1:nt)    = (2/nt)*(1:nt)';
+       x(nt+1:nn) = ((2*nn-nt) - (nt+1:nn)')/(nn-nt);
+       x(nn+1:n)  = (n - (nn+1:n)')/(n-nn);
+    case 3
+       x(1:nt) = 2*ones(nt,1);
+    otherwise
+       error('Illegal value of example')
+    end
+    b = A*x;
+end
+%-------------------------------------------------------------------------%

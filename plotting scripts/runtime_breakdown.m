@@ -1,5 +1,5 @@
-function[] = cqrrpt_inner_speed()
-    Data_in = dlmread('DATA_in/CQRRP_inner_speed_16384_cols_16384_b_sz_start_256_b_sz_end_2048_d_factor_1.250000.txt');
+function[] = runtime_breakdown()
+    Data_in = dlmread('../DATA_in/2024_06_re_running_all/2024_07_04_M2_CQRRP_inner_speed_16384_cols_16384_b_sz_start_256_b_sz_end_2048_d_factor_1.125000.txt');
 
     Data_out = [];
 
@@ -44,5 +44,5 @@ function[] = cqrrpt_inner_speed()
     ax.FontSize = 23; 
     lgd.FontSize = 15;
 
-    saveas(gcf,'DATA_out/CQRRP_inner_speed_16384_cols_16384_b_sz_start_256_b_sz_end_2048_d_factor_1.250000.png')
+    %saveas(gcf,'DATA_out/CQRRP_inner_speed_16384_cols_16384_b_sz_start_256_b_sz_end_2048_d_factor_1.250000.png')
 end

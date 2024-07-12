@@ -3,12 +3,12 @@ function[] = runtime_breakdown_HQRRP()
 
 
     % The first two entries in the dataset are: num_krylov_iters, b_sz
-    Data_in = dlmread('DATA_in/2024_05_04_data/HQRRP_inner_speed_65536_cols_65536_b_sz_start_256_b_sz_end_2048_d_factor_1.125000.txt');
+    Data_in = dlmread('../DATA_in/2024_06_re_running_all/2024_07_01_M2_HQRRP_inner_speed_16384_cols_16384_b_sz_start_256_b_sz_end_2048_d_factor_1.125000.txt');
     Data_out     = [];
     Runtime_data = [];
 
     lines_we_want = [1, 5, 11, 13];
-    %nexttile
+    nexttile
     for j = 1 : 4
         % HQRRP
         %Data_out(j, 1) = 100 * Data_in(lines_we_want(1, j), 3)                  /Data_in(lines_we_want(1, j), 11); %#ok<AGROW> % Preallocation
@@ -81,7 +81,7 @@ function[] = runtime_breakdown_HQRRP()
     ax = gca;
     ax.FontSize = 23; 
     lgd.FontSize = 15;
-%{
+
     nexttile
     
     rows = 2^16;
@@ -102,5 +102,5 @@ function[] = runtime_breakdown_HQRRP()
     ax = gca;
     ax.FontSize = 23; 
     lgd.FontSize = 15;
-%}
+
 end

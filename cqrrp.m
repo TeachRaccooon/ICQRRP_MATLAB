@@ -39,6 +39,7 @@ function[A_cpy, Q, R, P] = cqrrp()
 ];
 
     for j = 1:ceil(min(m, n) / b_sz)
+        B
         % rows, cols decreases by block_sz
         rows = m - b_sz * (j - 1);
         cols = n - b_sz * (j - 1);

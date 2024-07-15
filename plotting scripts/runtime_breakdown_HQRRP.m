@@ -3,47 +3,48 @@ function[] = runtime_breakdown_HQRRP()
 
 
     % The first two entries in the dataset are: num_krylov_iters, b_sz
-    Data_in = dlmread('../DATA_in/2024_06_re_running_all/2024_07_01_M2_HQRRP_inner_speed_16384_cols_16384_b_sz_start_256_b_sz_end_2048_d_factor_1.125000.txt');
+    Data_in = dlmread('../DATA_in/2024_06_re_running_all/2024_07_12_Riley_HQRRP_runtime_breakdown.txt');
     Data_out     = [];
     Runtime_data = [];
 
-    lines_we_want = [1, 5, 11, 13];
+    Data_in = data_preprocessing_best(Data_in, 4, 4);
+
     nexttile
-    for j = 1 : 4
+    for j = 1 : size(Data_in, 1)
         % HQRRP
-        %Data_out(j, 1) = 100 * Data_in(lines_we_want(1, j), 3)                  /Data_in(lines_we_want(1, j), 11); %#ok<AGROW> % Preallocation
-        %Data_out(j, 2) = 100 * Data_in(lines_we_want(1, j), 4)                  /Data_in(lines_we_want(1, j), 11); %#ok<AGROW> % Sketching
-        %Data_out(j, 3) = 100 * Data_in(lines_we_want(1, j), 5)                  /Data_in(lines_we_want(1, j), 11); %#ok<AGROW> % Downdating
-        %Data_out(j, 1) = 100 * Data_in(lines_we_want(1, j), 6)                  /Data_in(lines_we_want(1, j), 11); %#ok<AGROW> % QRCP
+        %Data_out(j, 1) = 100 * Data_in(j, 3)                  /Data_in(j, 11); %#ok<AGROW> % Preallocation
+        %Data_out(j, 2) = 100 * Data_in(j, 4)                  /Data_in(j, 11); %#ok<AGROW> % Sketching
+        %Data_out(j, 3) = 100 * Data_in(j, 5)                  /Data_in(j, 11); %#ok<AGROW> % Downdating
+        %Data_out(j, 1) = 100 * Data_in(j, 6)                  /Data_in(j, 11); %#ok<AGROW> % QRCP
         
         
         % QRCP
-        %Data_out(j, 1)  = 100 * Data_in(lines_we_want(1, j), 12)                  /Data_in(lines_we_want(1, j), 11); %#ok<AGROW> % QRCP preallocation
-        %Data_out(j, 1)  = 100 * Data_in(lines_we_want(1, j), 13)                  /Data_in(lines_we_want(1, j), 11); %#ok<AGROW> % QRCP norms
-        Data_out(j, 1)  = 100 * Data_in(lines_we_want(1, j), 14)                  /Data_in(lines_we_want(1, j), 11); %#ok<AGROW> % QRCP pivoting
-        %Data_out(j, 4)  = 100 * Data_in(lines_we_want(1, j), 15)                  /Data_in(lines_we_want(1, j), 11); %#ok<AGROW> % QRCP gen_reflector 1
-        Data_out(j, 2)  = 100 * Data_in(lines_we_want(1, j), 16)                  /Data_in(lines_we_want(1, j), 11); %#ok<AGROW> % QRCP gen_reflector 2
-        %Data_out(j, 6)  = 100 * Data_in(lines_we_want(1, j), 17)                  /Data_in(lines_we_want(1, j), 11); %#ok<AGROW> % QRCP downdating
-        %Data_out(j, 7) = 100 * Data_in(lines_we_want(1, j), 18)                  /Data_in(lines_we_want(1, j), 11); %#ok<AGROW> % QRCP gen_T
-        Data_out(j, 3) = 100 * (Data_in(lines_we_want(1, j), 13) + Data_in(lines_we_want(1, j), 18) + Data_in(lines_we_want(1, j), 15) + Data_in(lines_we_want(1, j), 12) + Data_in(lines_we_want(1, j), 17) + Data_in(lines_we_want(1, j), 19))                  /Data_in(lines_we_want(1, j), 11); %#ok<AGROW> % QRCP_other
+        %Data_out(j, 1)  = 100 * Data_in(j, 12)                  /Data_in(j, 11); %#ok<AGROW> % QRCP preallocation
+        %Data_out(j, 1)  = 100 * Data_in(j, 13)                  /Data_in(j, 11); %#ok<AGROW> % QRCP norms
+        Data_out(j, 1)  = 100 * Data_in(j, 14)                  /Data_in(j, 11); %#ok<AGROW> % QRCP pivoting
+        %Data_out(j, 4)  = 100 * Data_in(j, 15)                  /Data_in(j, 11); %#ok<AGROW> % QRCP gen_reflector 1
+        Data_out(j, 2)  = 100 * Data_in(j, 16)                  /Data_in(j, 11); %#ok<AGROW> % QRCP gen_reflector 2
+        %Data_out(j, 6)  = 100 * Data_in(j, 17)                  /Data_in(j, 11); %#ok<AGROW> % QRCP downdating
+        %Data_out(j, 7) = 100 * Data_in(j, 18)                  /Data_in(j, 11); %#ok<AGROW> % QRCP gen_T
+        Data_out(j, 3) = 100 * (Data_in(j, 13) + Data_in(j, 18) + Data_in(j, 15) + Data_in(j, 12) + Data_in(j, 17) + Data_in(j, 19))                  /Data_in(j, 11); %#ok<AGROW> % QRCP_other
         
-        %Data_out(j, 4) = 100 * Data_in(lines_we_want(1, j), 7)                  /Data_in(lines_we_want(1, j), 11); %#ok<AGROW> % QR
+        %Data_out(j, 4) = 100 * Data_in(j, 7)                  /Data_in(j, 11); %#ok<AGROW> % QR
         
-        %Data_out(j, 1)  = 100 * Data_in(lines_we_want(1, j), 21)                  /Data_in(lines_we_want(1, j), 11); %#ok<AGROW> % QR preallocation
-        %Data_out(j, 1)  = 100 * Data_in(lines_we_want(1, j), 22)                  /Data_in(lines_we_want(1, j), 11); %#ok<AGROW> % QR norms
-        %Data_out(j, 4)  = 100 * Data_in(lines_we_want(1, j), 23)                  /Data_in(lines_we_want(1, j), 11); %#ok<AGROW> % QR pivoting
-        %Data_out(j, 4)  = 100 * Data_in(lines_we_want(1, j), 24)                  /Data_in(lines_we_want(1, j), 11); %#ok<AGROW> % QR gen_reflector 1
-        Data_out(j, 4)  = 100 * Data_in(lines_we_want(1, j), 25)                  /Data_in(lines_we_want(1, j), 11); %#ok<AGROW> % QR gen_reflector 2
-        %Data_out(j, 6)  = 100 * Data_in(lines_we_want(1, j), 26)                  /Data_in(lines_we_want(1, j), 11); %#ok<AGROW> % QR downdating
-        %Data_out(j, 7) = 100 * Data_in(lines_we_want(1, j), 27)                  /Data_in(lines_we_want(1, j), 11); %#ok<AGROW> % QR gen_T
-        Data_out(j, 5) = 100 * (Data_in(lines_we_want(1, j), 23) + Data_in(lines_we_want(1, j), 21) + Data_in(lines_we_want(1, j), 22) + Data_in(lines_we_want(1, j), 24) + Data_in(lines_we_want(1, j), 26) + Data_in(lines_we_want(1, j), 27) + Data_in(lines_we_want(1, j), 28))                   /Data_in(lines_we_want(1, j), 11); %#ok<AGROW> % QR_other
+        %Data_out(j, 1)  = 100 * Data_in(j, 21)                  /Data_in(j, 11); %#ok<AGROW> % QR preallocation
+        %Data_out(j, 1)  = 100 * Data_in(j, 22)                  /Data_in(j, 11); %#ok<AGROW> % QR norms
+        %Data_out(j, 4)  = 100 * Data_in(j, 23)                  /Data_in(j, 11); %#ok<AGROW> % QR pivoting
+        %Data_out(j, 4)  = 100 * Data_in(j, 24)                  /Data_in(j, 11); %#ok<AGROW> % QR gen_reflector 1
+        Data_out(j, 4)  = 100 * Data_in(j, 25)                  /Data_in(j, 11); %#ok<AGROW> % QR gen_reflector 2
+        %Data_out(j, 6)  = 100 * Data_in(j, 26)                  /Data_in(j, 11); %#ok<AGROW> % QR downdating
+        %Data_out(j, 7) = 100 * Data_in(j, 27)                  /Data_in(j, 11); %#ok<AGROW> % QR gen_T
+        Data_out(j, 5) = 100 * (Data_in(j, 23) + Data_in(j, 21) + Data_in(j, 22) + Data_in(j, 24) + Data_in(j, 26) + Data_in(j, 27) + Data_in(j, 28))                   /Data_in(j, 11); %#ok<AGROW> % QR_other
         
         
         
-        Data_out(j, 6) = 100 * Data_in(lines_we_want(1, j), 8)                  /Data_in(lines_we_want(1, j), 11); %#ok<AGROW> % Update A
-        %Data_out(j, 7) = 100 * Data_in(lines_we_want(1, j), 9)                  /Data_in(lines_we_want(1, j), 11); %#ok<AGROW> % Update sketch
+        Data_out(j, 6) = 100 * Data_in(j, 8)                  /Data_in(j, 11); %#ok<AGROW> % Update A
+        %Data_out(j, 7) = 100 * Data_in(j, 9)                  /Data_in(j, 11); %#ok<AGROW> % Update sketch
         
-        Data_out(j, 7) = 100 * (Data_in(lines_we_want(1, j), 10) + Data_in(lines_we_want(1, j), 3) + Data_in(lines_we_want(1, j), 4) + Data_in(lines_we_want(1, j), 5) + Data_in(lines_we_want(1, j), 9)) / Data_in(lines_we_want(1, j), 11); %#ok<AGROW> % Other
+        Data_out(j, 7) = 100 * (Data_in(j, 10) + Data_in(j, 3) + Data_in(j, 4) + Data_in(j, 5) + Data_in(j, 9)) / Data_in(j, 11); %#ok<AGROW> % Other
         
     
     
@@ -84,15 +85,15 @@ function[] = runtime_breakdown_HQRRP()
 
     nexttile
     
-    rows = 2^16;
-    cols = 2^16;
+    rows = 2^14;
+    cols = 2^14;
 
     geqrf_gflop = (2 * rows * cols^2 - (2 / 3) * cols^3 + rows * cols + cols^2 + (14 / 3) * cols) / 10^9;
     hqrrp_old_time = 3887494164;
     geqrf_gflop / (hqrrp_old_time / 10^6)
 
     for j = 1 : 4
-        Runtime_data(j, 1) = geqrf_gflop / (Data_in(lines_we_want(1, j), 11) / 10^6);
+        Runtime_data(j, 1) = geqrf_gflop / (Data_in(j, 11) / 10^6);
     end
     x = [256, 512, 1024, 2048];
     xticks([256 512 1024 2048])
@@ -103,4 +104,24 @@ function[] = runtime_breakdown_HQRRP()
     ax.FontSize = 23; 
     lgd.FontSize = 15;
 
+end
+
+function[Data_out] = data_preprocessing_best(Data_in, num_col_sizes, numiters)
+    
+    Data_out = [];
+    i = 1;
+
+    Data_out = [];
+    while i < num_col_sizes * numiters
+        best_speed = intmax;
+        best_speed_idx = i;
+        for j = 1:numiters
+            if Data_in(i, 11) < best_speed
+                best_speed = Data_in(i, 11);
+                best_speed_idx = i;
+            end
+            i = i + 1;
+        end
+        Data_out = [Data_out; Data_in(best_speed_idx, :)]; %#ok<AGROW>
+    end
 end

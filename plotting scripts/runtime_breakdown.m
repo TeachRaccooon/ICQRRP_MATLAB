@@ -1,9 +1,9 @@
 function[] = runtime_breakdown()
-    Data_in = dlmread('../DATA_in/2024_06_re_running_all/2024_07_04_M2_CQRRP_inner_speed_16384_cols_16384_b_sz_start_256_b_sz_end_2048_d_factor_1.125000.txt');
+    Data_in = dlmread('../DATA_in/2024_06_re_running_all/2024_07_12_Riley_ICQRRP_runtime_breakdown.txt');
 
+
+    Data_in = data_preprocessing_best(Data_in, 4, 5);
     Data_out = [];
-
-    size(Data_in)
 
     for i = 1:size(Data_in, 1)
 
@@ -45,4 +45,24 @@ function[] = runtime_breakdown()
     lgd.FontSize = 15;
 
     %saveas(gcf,'DATA_out/CQRRP_inner_speed_16384_cols_16384_b_sz_start_256_b_sz_end_2048_d_factor_1.250000.png')
+end
+
+function[Data_out] = data_preprocessing_best(Data_in, num_col_sizes, numiters)
+    
+    Data_out = [];
+    i = 1;
+
+    Data_out = [];
+    while i < num_col_sizes * numiters
+        best_speed = intmax;
+        best_speed_idx = i;
+        for j = 1:numiters
+            if Data_in(i, 12) < best_speed
+                best_speed = Data_in(i, 12);
+                best_speed_idx = i;
+            end
+            i = i + 1;
+        end
+        Data_out = [Data_out; Data_in(best_speed_idx, :)]; %#ok<AGROW>
+    end
 end

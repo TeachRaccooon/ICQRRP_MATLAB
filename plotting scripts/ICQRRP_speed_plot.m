@@ -1,5 +1,5 @@
 function[] = ICQRRP_speed_plot()
-    Data_in = dlmread('../DATA_in/2024_06_re_running_all/2024_07_10_ICQRRP_time_raw_rows_32768_cols_32768_b_sz_start_256_b_sz_end_2048_d_factor_1.250000.txt');
+    Data_in = dlmread('../DATA_in/2024_06_re_running_all/2024_07_11_Riley_ICQRRP_speed_comp.txt');
 
     rows = 2^14;
     cols = 2^14;

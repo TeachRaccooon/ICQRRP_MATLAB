@@ -1,10 +1,10 @@
 function[] = ICQRRP_speed_plot()
-    Data_in = dlmread('../DATA_in/2024_06_re_running_all/2024_07_11_Riley_ICQRRP_speed_comp.txt');
+    Data_in = dlmread('../DATA_in/2024_09_re_running_all/2024_09_16_HEXANE_CPU_ICQRRP_time_raw_rows_8192_cols_8192_b_sz_start_256_b_sz_end_2048_d_factor_1.000000.txt');
 
-    rows = 2^14;
-    cols = 2^14;
+    rows = 2^13;
+    cols = 2^13;
 
-    Data_in = data_preprocessing_best(Data_in, 4, 10)
+    Data_in = data_preprocessing_best(Data_in, 4, 5)
 
     geqrf_gflop = (2 * rows * cols^2 - (2 / 3) * cols^3 + rows * cols + cols^2 + (14 / 3) * cols) / 10^9;
 for i = 1:4

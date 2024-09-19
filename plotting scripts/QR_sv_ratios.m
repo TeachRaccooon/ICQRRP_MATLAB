@@ -1,5 +1,5 @@
 function[] = QR_sv_ratios()
-    Data_in = dlmread('../DATA_in/2024_06_re_running_all/2024_07_02_ELEPHANT_SPIKE_QR_sv_ratios_rows_1024_cols_1024_b_sz_256_d_factor_1.125000.txt');
+    Data_in = dlmread('../DATA_in/2024_09_re_running_all/2024_09_16_Hexane_QR_sv_ratios_rows_8192_cols_8192_b_sz_32_d_factor_1.000000.dat');
 
     size(Data_in)
     Data_in(:, 1:10)

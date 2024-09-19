@@ -1,12 +1,12 @@
 function[] = runtime_breakdown()
-    Data_in = dlmread('../DATA_in/2024_06_re_running_all/2024_07_12_Riley_ICQRRP_runtime_breakdown.txt');
+    Data_in = dlmread('../DATA_in/2024_09_re_running_all/2024_09_16_HEXANE_CPU_GEMQRT_CQRRP_inner_speed_8192_cols_8192_b_sz_start_256_b_sz_end_2048_d_factor_1.000000.txt');
 
 
     Data_in = data_preprocessing_best(Data_in, 4, 5);
     Data_out = [];
 
     for i = 1:size(Data_in, 1)
-
+    
         Data_out(i, 1) = 100 * Data_in(i, 1)                  /Data_in(i, 12); %#ok<AGROW> % SASO
         %Data_out(i, 2) = 100 * Data_in(i, 2)                  /Data_in(i, 12); %#ok<AGROW> % Preallocation
         Data_out(i, 2) = 100 * Data_in(i, 3)                  /Data_in(i, 12); %#ok<AGROW> % QRCP
@@ -19,7 +19,18 @@ function[] = runtime_breakdown()
         %Data_out(i, 6) = 100 * Data_in(i, 10)                 /Data_in(i, 12); %#ok<AGROW> % r_piv
         
         Data_out(i, 6) = 100 * (Data_in(i, 11) + Data_in(i, 8) + Data_in(i, 9) + Data_in(i, 10) + Data_in(i, 6) + Data_in(i, 2) ) /Data_in(i, 12); %#ok<AGROW> % rest
+
+        % Check Percentages
+        %fprintf("Preallocation  %f\n", 100 *Data_in(i, 2)  /Data_in(i, 12))
+        %fprintf("Reconstruction %f\n", 100 *Data_in(i, 6)  /Data_in(i, 12))
+        %fprintf("Updating2      %f\n", 100 *Data_in(i, 8)  /Data_in(i, 12))
+        %fprintf("Updating3      %f\n", 100 *Data_in(i, 9)  /Data_in(i, 12))
+        %fprintf("r_piv_t_dur    %f\n", 100 *Data_in(i, 10) /Data_in(i, 12))
+        %fprintf("t_rest         %f\n\n", 100 *Data_in(i, 11) /Data_in(i, 12))
+
     end
+
+    Data_out
 
     bplot = bar(Data_out,'stacked');
     bplot(1).FaceColor = 'cyan';

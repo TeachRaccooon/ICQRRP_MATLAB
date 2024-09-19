@@ -3,7 +3,7 @@ function[] = runtime_breakdown_HQRRP()
 
 
     % The first two entries in the dataset are: num_krylov_iters, b_sz
-    Data_in = dlmread('../DATA_in/2024_06_re_running_all/2024_07_12_Riley_HQRRP_runtime_breakdown.txt');
+    Data_in = dlmread('../DATA_in/2024_07_re_running_all/2024_07_21_Apple_HQRRP_inner_speed_32768_cols_32768_b_sz_start_256_b_sz_end_2048_d_factor_1.125000.dat');
     Data_out     = [];
     Runtime_data = [];
 
@@ -85,8 +85,8 @@ function[] = runtime_breakdown_HQRRP()
 
     nexttile
     
-    rows = 2^14;
-    cols = 2^14;
+    rows = 2^15;
+    cols = 2^15;
 
     geqrf_gflop = (2 * rows * cols^2 - (2 / 3) * cols^3 + rows * cols + cols^2 + (14 / 3) * cols) / 10^9;
     hqrrp_old_time = 3887494164;

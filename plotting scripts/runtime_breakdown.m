@@ -1,8 +1,8 @@
 function[] = runtime_breakdown()
-    Data_in = dlmread('../DATA_in/2024_09_re_running_all/2024_09_16_HEXANE_CPU_GEMQRT_CQRRP_inner_speed_8192_cols_8192_b_sz_start_256_b_sz_end_2048_d_factor_1.000000.txt');
+    Data_in = dlmread('../DATA_in/2024_10_re_running_all/2024_10_03_CQRRP_inner_speed_16384_cols_16384_b_sz_start_32_b_sz_end_2048_d_factor_1.000000.txt');
 
 
-    Data_in = data_preprocessing_best(Data_in, 4, 5);
+    Data_in = data_preprocessing_best(Data_in, 7, 5);
     Data_out = [];
 
     for i = 1:size(Data_in, 1)
@@ -47,9 +47,9 @@ function[] = runtime_breakdown()
     bplot(5).FaceAlpha = 0.8;
     bplot(6).FaceAlpha = 0.8;
     
-    lgd = legend('SASO','QRCP', 'Precond', 'CholQR', 'Updating', 'Other')
+    lgd = legend('Sketching','QRCP', 'Precond', 'CholQR', 'Updating', 'Other')
     legend('Location','northeastoutside'); 
-    set(gca,'XTickLabel',{'256', '', '1024', ''});
+    set(gca,'XTickLabel',{'', '64', '', '256', '', '1024', ''});
     ylim([0 100]);
     ax = gca;
     ax.FontSize = 23; 

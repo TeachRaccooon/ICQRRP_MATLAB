@@ -3,11 +3,11 @@ function[] = runtime_breakdown_HQRRP()
 
 
     % The first two entries in the dataset are: num_krylov_iters, b_sz
-    Data_in = dlmread('../DATA_in/2024_07_re_running_all/2024_07_21_Apple_HQRRP_inner_speed_32768_cols_32768_b_sz_start_256_b_sz_end_2048_d_factor_1.125000.dat');
+    Data_in = dlmread('../DATA_in/2024_10_re_running_all/HQRRP_runtime_breakdown_16384_cols_16384_b_sz_start_32_b_sz_end_2048_d_factor_1.000000.txt');
     Data_out     = [];
     Runtime_data = [];
 
-    Data_in = data_preprocessing_best(Data_in, 4, 4);
+    Data_in = data_preprocessing_best(Data_in, 7, 5);
 
     nexttile
     for j = 1 : size(Data_in, 1)
@@ -77,7 +77,7 @@ function[] = runtime_breakdown_HQRRP()
     
     lgd = legend('QRCP-piv', 'QRCP-larf', 'QRCP-other', 'QR-larf', 'QR-other', 'Update A', 'Other')
     legend('Location','northeastoutside'); 
-    set(gca,'XTickLabel',{'256', '512', '1024', '2048'});
+    set(gca,'XTickLabel',{'', '64', '', '256', '', '1024', ''});
     ylim([0 100]);
     ax = gca;
     ax.FontSize = 23; 
@@ -85,8 +85,8 @@ function[] = runtime_breakdown_HQRRP()
 
     nexttile
     
-    rows = 2^15;
-    cols = 2^15;
+    rows = 2^14;
+    cols = 2^14;
 
     geqrf_gflop = (2 * rows * cols^2 - (2 / 3) * cols^3 + rows * cols + cols^2 + (14 / 3) * cols) / 10^9;
     hqrrp_old_time = 3887494164;

@@ -1,13 +1,13 @@
 function[] = ICQRRP_speed_plot()
-    Data_in = dlmread('../DATA_in/2024_09_re_running_all/2024_09_16_HEXANE_CPU_ICQRRP_time_raw_rows_8192_cols_8192_b_sz_start_256_b_sz_end_2048_d_factor_1.000000.txt');
+    Data_in = dlmread('../DATA_in/2024_10_re_running_all/2024_10_03_ICQRRP_time_raw_rows_16384_cols_16384_b_sz_start_32_b_sz_end_2048_d_factor_1.000000.txt');
 
-    rows = 2^13;
-    cols = 2^13;
+    rows = 2^14;
+    cols = 2^14;
 
-    Data_in = data_preprocessing_best(Data_in, 4, 5)
+    Data_in = data_preprocessing_best(Data_in, 7, 5)
 
     geqrf_gflop = (2 * rows * cols^2 - (2 / 3) * cols^3 + rows * cols + cols^2 + (14 / 3) * cols) / 10^9;
-for i = 1:4
+for i = 1:7
     Data_out(i, 1) = geqrf_gflop / (Data_in(i, 1) / 10^6); %#ok<AGROW> % ICQRRP_best
     Data_out(i, 2) = geqrf_gflop / (Data_in(i, 2) / 10^6); %#ok<AGROW> % ICQRRP_QP3
     Data_out(i, 3) = geqrf_gflop / (Data_in(i, 3) / 10^6); %#ok<AGROW  % HQRRP
@@ -18,23 +18,23 @@ for i = 1:4
 end
     Data_out
 
-    x = [256 512 1024 2048];
-    semilogx(x, Data_out(:, 1), '-^', 'Color', 'black', "MarkerSize", 18,'LineWidth', 1.8)
+    x = [32 64 128 256 512 1024 2048];
+    semilogy(x, Data_out(:, 1), '-^', 'Color', 'black', "MarkerSize", 18,'LineWidth', 1.8)
     hold on
-    semilogx(x, Data_out(:, 2), '-*', 'Color', 'blue', "MarkerSize", 18,'LineWidth', 1.8)
+    semilogy(x, Data_out(:, 2), '-*', 'Color', 'blue', "MarkerSize", 18,'LineWidth', 1.8)
     hold on
-    semilogx(x, Data_out(:, 3), '-o', 'Color', 'red', "MarkerSize", 18,'LineWidth', 1.8)
+    semilogy(x, Data_out(:, 3), '-o', 'Color', 'red', "MarkerSize", 18,'LineWidth', 1.8)
     hold on
-    semilogx(x, Data_out(:, 4), '-s', 'Color', '#00FFFF', "MarkerSize", 18,'LineWidth', 1.8)
+    semilogy(x, Data_out(:, 4), '-s', 'Color', '#00FFFF', "MarkerSize", 18,'LineWidth', 1.8)
     hold on
-    semilogx(x, Data_out(:, 5), '-s', 'Color', '#EDB120', "MarkerSize", 18,'LineWidth', 1.8)
+    semilogy(x, Data_out(:, 5), '-s', 'Color', '#EDB120', "MarkerSize", 18,'LineWidth', 1.8)
     hold on
-    semilogx(x, Data_out(:, 6), '-o', 'Color', 'magenta', "MarkerSize", 18,'LineWidth', 1.8)
+    semilogy(x, Data_out(:, 6), '-o', 'Color', 'magenta', "MarkerSize", 18,'LineWidth', 1.8)
     hold on
-    semilogx(x, Data_out(:, 7), '-s', 'Color', 'green', "MarkerSize", 18,'LineWidth', 1.8)
-    xticks([256 512 1024 2048]);
+    semilogy(x, Data_out(:, 7), '-s', 'Color', 'green', "MarkerSize", 18,'LineWidth', 1.8)
+    xticks([32 64 128 256 512 1024 2048]);
     %yticks([0 200 400 600 800 1000 1200 1400 1600]);
-    xlim([256 2048]);
+    xlim([32 2048]);
     %ylim([0 1600]);
     ax = gca;
     ax.FontSize = 15; 

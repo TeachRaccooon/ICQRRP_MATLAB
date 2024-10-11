@@ -51,7 +51,8 @@ function[] = runtime_breakdown_GPU()
     
     lgd = legend('QRCP','PIV(A)', 'CholQR', 'ORHR\_COL', 'ORMQR(A)', 'Other');
 
-
+    ylabel('Runtime %', 'FontSize', 15);
+    xlabel('Block size', 'FontSize', 15);
     legend('Location','northeastoutside'); 
     set(gca,'XTickLabel',{'32', '', '', '256', '', '', '2048'});
     ylim([0 100]);

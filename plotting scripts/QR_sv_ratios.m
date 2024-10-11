@@ -4,17 +4,17 @@ function[] = QR_sv_ratios()
     size(Data_in)
     Data_in(:, 1:10)
 
-    plot( Data_in(1, :), '', 'Color', 'red', "MarkerSize", 1.2,'LineWidth', 1.1)
-    hold on
     plot( Data_in(2, :), '', 'Color', 'blue', "MarkerSize", 1.2,'LineWidth', 0.3)
+    hold on
+    plot( Data_in(1, :), '', 'Color', 'red', "MarkerSize", 1.2,'LineWidth', 1.8)
     ax = gca;
-    ax.FontSize = 15; 
+    ax.FontSize = 20; 
     grid on
     xlim([0 4096]);
     %ylim([0 10]);
     %yticks([0 0.2 0.5 1 2 5 10]);
-    ylabel('R[k, k]/sigma[k]', 'FontSize', 15);
-    xlabel('k', 'FontSize', 15); 
+    ylabel('R[k, k]/sigma[k]', 'FontSize', 20);
+    xlabel('k', 'FontSize', 20); 
     %lgd=legend('GEQP3', 'CQRRP')
     %lgd.FontSize = 18;
     set(gca, 'YScale', 'log')

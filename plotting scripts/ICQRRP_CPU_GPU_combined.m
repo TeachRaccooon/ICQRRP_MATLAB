@@ -45,9 +45,9 @@ end
     %hold on
     %semilogx(x, Data_out_cpu(:, 5), '-s', 'Color', '#EDB120', "MarkerSize", 18,'LineWidth', 1.8)
     %hold on
-    semilogx(x, Data_out_cpu(:, 6), '-s', 'Color', 'blue', "MarkerSize", 18,'LineWidth', 1.8)
+    semilogx(x, Data_out_cpu(:, 6), '', 'Color', 'blue', "MarkerSize", 18,'LineWidth', 2.2)
     hold on
-    semilogx(x, Data_out_cpu(:, 7), '-v', 'Color', 'red', "MarkerSize", 18,'LineWidth', 1.8)
+    semilogx(x, Data_out_cpu(:, 7), '', 'Color', 'red', "MarkerSize", 18,'LineWidth', 2.2)
     xticks([256 512 1024 2048]);
     yticks([0 0.5 1 1.5]);
     xlim([256 2048]);
@@ -70,14 +70,14 @@ end
     hold on
     plot(x, Data_out_gpu(:, 2), '-*', 'Color', 'black', "MarkerSize", 18,'LineWidth', 1.8)
     hold on
-    plot(x, Data_out_gpu(:, 3), '-s', 'Color', 'blue',     "MarkerSize", 18,'LineWidth', 1.8)
+    plot(x, Data_out_gpu(:, 3), '', 'Color', 'blue',     "MarkerSize", 18,'LineWidth', 2.2)
     hold on
     % Using these buffers to create the common legend for the two plots.
     % Probably not the best approach.
     buffer = -1000 * ones(28, 1);
     plot(x, buffer, '-o', 'Color', 'magenta',     "MarkerSize", 18,'LineWidth', 1.8)
     hold on
-    plot(x, buffer, '-v', 'Color', 'red',     "MarkerSize", 18,'LineWidth', 1.8)
+    plot(x, buffer, '', 'Color', 'red',     "MarkerSize", 18,'LineWidth', 2.2)
     xticks([32, 280, 512, 1024, 2048]);
     xlim([32 2048]);
     ylim([0 20]);

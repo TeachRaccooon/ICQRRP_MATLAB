@@ -1,9 +1,9 @@
 function[] = runtime_breakdown_CPU_GPU_combined()
-    tiledlayout(1, 3,"TileSpacing","tight")
+    tiledlayout(1, 2,"TileSpacing","tight")
 
     %Data_in_ICQRRP_CPU = dlmread('../DATA_in/2024_10_re_running_all/2024_10_06_EPYC-9354P/OpenMP32/CQRRP_runtime_breakdown_32768_cols_32768_b_sz_start_256_b_sz_end_1024_d_factor_1.000000.dat');
     Data_in_ICQRRP_CPU = dlmread('../DATA_in/2024_10_re_running_all/2024_10_10_CQRRP_runtime_breakdown_65536_cols_65536_b_sz_start_256_b_sz_end_2048_d_factor_1.000000.txt');
-    Data_in_HQRRP      = dlmread('../DATA_in/2024_09_re_running_all/2024_09_16_ISAAC_HQRRP_runtime_breakdown_16384_cols_16384_b_sz_start_256_b_sz_end_2048_d_factor_1.000000.txt');
+    Data_in_HQRRP      = dlmread('../DATA_in/2024_10_re_running_all/2024_10_11_HQRRP_runtime_breakdown_65536_cols_65536_b_sz_start_32_b_sz_end_2048_d_factor_1.000000.txt');
     Data_in_ICQRRP_GPU = dlmread('../DATA_in/2024_09_re_running_all/2024_09_18_ICQRRP_GPU_runtime_breakdown_innerQRF_0_rows_32768_cols_32768_d_factor_1.0.dat');
 
     Data_in_ICQRRP_CPU = data_preprocessing_best(Data_in_ICQRRP_CPU, 4, 3);
@@ -19,7 +19,7 @@ function[] = runtime_breakdown_CPU_GPU_combined()
         Data_out_HQRRP(j, 6) = 100 * Data_in_HQRRP(j, 8)                   /Data_in_HQRRP(j, 11); %#ok<AGROW> % Update A
         Data_out_HQRRP(j, 7) = 100 * (Data_in_HQRRP(j, 10) + Data_in_HQRRP(j, 3) + Data_in_HQRRP(j, 4) + Data_in_HQRRP(j, 5) + Data_in_HQRRP(j, 9)) / Data_in_HQRRP(j, 11); %#ok<AGROW> % Other
     end
-
+%{
     nexttile
 
     bplot = bar(Data_out_HQRRP,'stacked');
@@ -39,21 +39,7 @@ function[] = runtime_breakdown_CPU_GPU_combined()
     bplot(6).FaceAlpha = 0.8;
     bplot(7).FaceAlpha = 0.8;
 
-%{
-% Plot the stacked bar chart
-bplot = bar(Data_out_HQRRP, 'stacked');
-    
-hatchfill2(bplot(1), 'cross', 'HatchAngle', 45, 'HatchDensity', 60, 'HatchColor', 'blue');
-hatchfill2(bplot(2), 'single', 'HatchAngle', 45, 'HatchDensity', 60, 'HatchColor', 'blue');
-hatchfill2(bplot(3), 'single', 'HatchAngle', 45, 'HatchDensity', 60, 'HatchColor', 'blue');
-hatchfill2(bplot(4), 'single', 'HatchAngle', 45, 'HatchDensity', 60, 'HatchColor', 'blue');
-hatchfill2(bplot(5), 'single', 'HatchAngle', 45, 'HatchDensity', 60, 'HatchColor', 'blue');
-
-legendData = {'QRCP-piv', 'QRCP-larf', 'QRCP-other'};
-[~, object_h, ~, ~] = legendflex(bplot, legendData);
-hatchfill2(object_h(1), 'cross', 'HatchAngle', 45, 'HatchDensity', 60/4, 'HatchColor', 'black');
-%}
-    title('HQRRP runtime breakdown (on Dual AMD EPYC 7513)', 'FontSize', 12);
+    title('RandLAPACK HQRRP CPU', 'FontSize', 12);
     ylabel('Runtime %', 'FontSize', 23);
     xlabel('Block size', 'FontSize', 23); 
     lgd = legend('QRCP-piv', 'QRCP-larf', 'QRCP-other', 'QR-larf', 'QR-other', 'Update M', 'Other');
@@ -63,7 +49,7 @@ hatchfill2(object_h(1), 'cross', 'HatchAngle', 45, 'HatchDensity', 60/4, 'HatchC
     ax = gca;
     ax.FontSize  = 23; 
     lgd.FontSize = 23;
-
+%}
     for i = 1:size(Data_in_ICQRRP_CPU, 1)
         Data_out_ICQRRP_CPU(i, 1) = 100 * Data_in_ICQRRP_CPU(i, 1)                  /Data_in_ICQRRP_CPU(i, 12); %#ok<AGROW> % SASO
         Data_out_ICQRRP_CPU(i, 2) = 100 * Data_in_ICQRRP_CPU(i, 3)                  /Data_in_ICQRRP_CPU(i, 12); %#ok<AGROW> % QRCP
@@ -92,10 +78,11 @@ hatchfill2(object_h(1), 'cross', 'HatchAngle', 45, 'HatchDensity', 60/4, 'HatchC
     bplot(6).FaceAlpha = 0.8;
     bplot(7).FaceAlpha = 0.8;
     
-    title('ICQRRP runtime breakdown (on Dual AMD EPYC 7513)');
+    title('ICQRRP CPU');
     xlabel('Block size', 'FontSize', 23); 
     lgd = legend('Sketching','QRCP(M^{sk})', 'Precond', 'CholQR', 'Reconstruct Q', 'Update M', 'Other');
-    legend('Location','northeastoutside'); 
+    ylabel('Runtime %', 'FontSize', 23);
+    legend('Location','southeastoutside'); 
     set(gca,'XTickLabel',{'256', '512', '1024', '2048'});
     ylim([0 100]);
     ax = gca;
@@ -128,10 +115,11 @@ hatchfill2(object_h(1), 'cross', 'HatchAngle', 45, 'HatchDensity', 60/4, 'HatchC
     bplot(5).FaceAlpha  = 0.8;
     bplot(6).FaceAlpha  = 0.8;
     
-    title('ICQRRP runtime breakdown (on H100)');
+    title('ICQRRP GPU');
     xlabel('Block size', 'FontSize', 23); 
     lgd = legend('QRCP(M^{sk})','Precond', 'CholQR', 'Reconstruct Q', 'Update M', 'Other');
-    legend('Location','northeastoutside'); 
+    %ylabel('Runtime %', 'FontSize', 23);
+    legend('Location','southeastoutside'); 
     set(gca,'XTickLabel',{'32', '', '', '256', '', '', '2048'});
     ylim([0 100]);
     ax = gca;

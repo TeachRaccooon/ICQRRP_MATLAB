@@ -2,7 +2,7 @@ function[] = ICQRRP_CPU_GPU_combined()
     figure;
 
     %Data_in_cpu = dlmread('../DATA_in/2024_10_re_running_all/2024_10_06_EPYC-9354P/OpenMP32/ICQRRP_time_raw_rows_32768_cols_32768_b_sz_start_256_b_sz_end_1024_d_factor_1.000000.dat');
-    Data_in_cpu = dlmread('../DATA_in/2024_10_re_running_all/I2024_10_10_CQRRP_time_raw_rows_65536_cols_65536_b_sz_start_256_b_sz_end_2048_d_factor_1.000000.txt');
+    Data_in_cpu = dlmread('../DATA_in/2024_10_re_running_all/2024_10_10_ICQRRP_time_raw_rows_65536_cols_65536_b_sz_start_256_b_sz_end_2048_d_factor_1.000000.txt');
     Data_in_gpu = dlmread('../DATA_in/2024_10_re_running_all/2024_10_02_ICQRRP_GPU_speed_rows_32768_cols_32768_d_factor_1.0.txt');
 
     rows = 2^16;
@@ -57,7 +57,7 @@ end
     grid on
     ylabel('Tera FLOP/s', 'FontSize', 15);
     xlabel('Block size', 'FontSize', 15); 
-    title('CPU algorithms (on Dual AMD EPYC 7513)');
+    title('CPU algorithms');
     %lgd=legend('ICQRRP', 'HQRRP', 'GEQRF', 'GEQP3')
     lgd.FontSize = 20;
     ax = gca
@@ -85,7 +85,7 @@ end
     ax.FontSize = 15; 
     grid on
 
-    title('GPU algorithms (on NVIDIA H100)');
+    title('GPU algorithms');
     xlabel('Block size', 'FontSize', 15); 
     lgd=legend('IHQRRP', 'ICQRRP', 'GEQRF', 'HQRRP', 'GEQP3')
     lgd.FontSize = 20;

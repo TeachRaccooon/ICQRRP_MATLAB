@@ -1,10 +1,10 @@
 function[] = QR_speed_plot()
-    Data_in = dlmread('Data_in/2024_05_28_QR_speed/QR_speed_comp_131072_col_start_512_col_stop_8192.txt');
+    Data_in = dlmread('../Data_in/2024_10_re_running_all/2024_10_14_QR_speed_comp_131072_col_start_256_col_stop_8192.txt');
 
     rows = 2^17;
     cols = [2^9, 2^10, 2^11, 2^12, 2^13];
 
-    Data_in = data_preprocessing(Data_in, 5, 50)
+    Data_in = data_preprocessing(Data_in, 5, 5)
 
     Data_out = [];
     for i = 1:size(Data_in, 1)
@@ -21,21 +21,21 @@ function[] = QR_speed_plot()
     x = [512 1024 2048 4096 8192];
     semilogx(x, Data_out(:, 4), '-^', 'Color', 'black', "MarkerSize", 18,'LineWidth', 1.8)
     hold on
-    semilogx(x, Data_out(:, 1), '-*', 'Color', '#00FFFF', "MarkerSize", 18,'LineWidth', 1.8)
+    semilogx(x, Data_out(:, 1), '-o', 'Color', 'blue', "MarkerSize", 18,'LineWidth', 1.8)
+    %hold on
+    %semilogx(x, Data_out(:, 2), '-*', 'Color', '#00FFFF', "MarkerSize", 18,'LineWidth', 1.8)
     hold on
-    semilogx(x, Data_out(:, 2), '-o', 'Color', 'red', "MarkerSize", 18,'LineWidth', 1.8)
-    hold on
-    semilogx(x, Data_out(:, 3), '-s', 'Color', '#EDB120', "MarkerSize", 18,'LineWidth', 1.8)
+    semilogx(x, Data_out(:, 3), '-s', 'Color', 'red', "MarkerSize", 18,'LineWidth', 1.8)
     xticks([1024 4096]);
     yticks([0 200 400 600 800 1000 1200 1400 1600]);
     xlim([512 8192]);
-    %ylim([0 1600]);
+    ylim([0 1100]);
     ax = gca;
     ax.FontSize = 15; 
     grid on
     %ylabel('GFLOP/s', 'FontSize', 15);
     %xlabel('Block size', 'FontSize', 15); 
-    lgd=legend('CholQR', 'GEQRF', 'GEQR', 'GEQRF+UNGQR')
+    lgd=legend('CholQR', 'QR with implicit Q', 'QR with explicit Q')
     lgd.FontSize = 20;
     ax = gca
     ax.XAxis.FontSize = 20;

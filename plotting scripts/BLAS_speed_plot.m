@@ -1,5 +1,5 @@
 function[] = BLAS_speed_plot()
-    Data_in = dlmread('../DATA_in/2024_10_re_running_all/BLAS_performance_comp_col_start_1024_col_stop_16384.txt');
+    Data_in = dlmread('../DATA_in/2024_10_re_running_all/2024_10_11_BLAS_performance_comp_col_start_1024_col_stop_16384.txt');
 
 
     dim = 2^10;
@@ -32,7 +32,7 @@ end
     ax = gca;
     ax.FontSize = 15; 
     grid on
-    ylabel('GFLOP/s', 'FontSize', 15);
+    ylabel('GigaFLOP/s', 'FontSize', 15);
     xlabel('n', 'FontSize', 15); 
     lgd=legend('BLAS lvl1', 'BLAS lvl2', 'BLAS lvl3')
     lgd.FontSize = 20;

@@ -1,8 +1,8 @@
-function[] = ICQRRP_tall_QR_subroutine_performance()
+function[] = ICQRRP_wide_QRCP_subroutine_performance()
     Data_in = dlmread('../DATA_in/2024_10_re_running_all/2024_10_11_ICQRRP_subroutines_speed_comp_65536_col_start_32_col_stop_2048.txt');
 
-    rows = 2^16;
-    cols = 32;
+    cols = 2^16;
+    rows = 32;
 
     num_block_sizes = 7;
     numiters = 5;
@@ -13,7 +13,10 @@ function[] = ICQRRP_tall_QR_subroutine_performance()
     Data_in = data_preprocessing_best(Data_in, num_block_sizes, numiters)
 
     for i = 1:num_block_sizes
-        cols = cols * 2;
+
+    
+
+        rows = rows * 2;
         geqrf_gflop = (2 * rows * cols^2 - (2 / 3) * cols^3 + rows * cols + cols^2 + (14 / 3) * cols) / 10^9;
     
         Data_out(i, 1) = geqrf_gflop / (Data_in(i, 1) / 10^6); %#ok<AGROW> % GEQRF
@@ -45,7 +48,7 @@ function[] = ICQRRP_tall_QR_subroutine_performance()
     ax = gca
     ax.XAxis.FontSize = 20;
     ax.YAxis.FontSize = 20;
-    %set(gca,'YScale','log');
+    set(gca,'YScale','log');
 
 end
 

@@ -1,8 +1,8 @@
 function[] = bqrrp_performance_cpu()
     Data_in_65k_Intel = dlmread('../../Data_in/2024_11_re_running_all/SapphireRapids/ICQRRP_time_raw_rows_65536_cols_65536_b_sz_start_256_b_sz_end_2048_d_factor_1.000000.txt');
     Data_in_32k_Intel = dlmread('../../Data_in/2024_11_re_running_all/SapphireRapids/ICQRRP_time_raw_rows_32768_cols_32768_b_sz_start_256_b_sz_end_2048_d_factor_1.000000.txt');
-    Data_in_65k_AMD   = zeros(size(Data_in_65k_Intel));
-    Data_in_32k_AMD   = zeros(size(Data_in_32k_Intel));
+    Data_in_65k_AMD   = dlmread('../../Data_in/2024_11_re_running_all/EPYC/ICQRRP_time_raw_rows_65536_cols_65536_b_sz_start_256_b_sz_end_2048_d_factor_1.000000.txt');
+    Data_in_32k_AMD   = dlmread('../../Data_in/2024_11_re_running_all/EPYC/ICQRRP_time_raw_rows_32768_cols_32768_b_sz_start_256_b_sz_end_2048_d_factor_1.000000.txt');
 
     rows1 = 2^16;
     cols1 = 2^16;
@@ -46,6 +46,9 @@ function[] = process_and_plot(Data_in, num_block_sizes, numiters, rows, cols, ti
     end
 
     % Making usre there's no variation in GEQRF and GEQP3
+    Data_out_GEQRF = Data_out(:, 7);
+    Data_out_GEQRF = Data_out_GEQRF(~isinf(Data_out_GEQRF));
+    Data_out(:, 7) = max(Data_out_GEQRF) * ones(size(Data_out, 7), 1);
     Data_out(:, 7) = max(Data_out(:, 7)) * ones(size(Data_out, 7), 1);
     Data_out(:, 8) = min(Data_out(:, 8)) * ones(size(Data_out, 8), 1);
 
@@ -68,7 +71,11 @@ function[] = process_and_plot(Data_in, num_block_sizes, numiters, rows, cols, ti
 
     xticks([256 512 1024 2048]);
     xlim([256 2048]);
-    %ylim([0 2000]);
+    if rows > 60000
+        ylim([0 6000]);
+    else
+        ylim([0 5000]);
+    end
     ax = gca;
     ax.XAxis.FontSize = 20;
     ax.YAxis.FontSize = 20;

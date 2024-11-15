@@ -63,7 +63,7 @@ function[] = process_and_plot(Data_in, titles, row, labels)
         set(gca,'Xticklabel',[])
     end
     if ~row && titles 
-        lgd = legend('Other','Update M', 'Reconstruct Q', 'PanelQR', 'Pivoting', 'QRCP(M^{sk})');
+        lgd = legend('Other','Apply Q', 'Reconstruct Q', 'Tall QR', 'Permutation', 'QRCP(M^{sk})');
         lgd.FontSize = 20;
         legend('Location','northeastoutside');
         if labels

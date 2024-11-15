@@ -1,6 +1,6 @@
 function[] = bqrrp_subroutine_performance_apply_q()
     Data_in_Intel = dlmread('../../DATA_in/2024_11_re_running_all/SapphireRapids/ICQRRP_subroutines_speed_comp_65536_col_start_256_col_stop_2048.dat');
-    Data_in_AMD   = zeros(size(Data_in_Intel));
+    Data_in_AMD   = dlmread('../../DATA_in/2024_11_re_running_all/EPYC/ICQRRP_subroutines_speed_comp_65536_col_start_256_col_stop_2048.txt');
 
     rows = 2^16;
     cols = 256;
@@ -55,7 +55,7 @@ function[] = process_and_plot(Data_in, num_block_sizes, numiters, rows, cols, ti
 
     xticks([ 512  2048]);
     xlim([256 2048]);
-    %ylim([0 3000]);
+    ylim([0 2.5]);
 
     ax = gca;
     ax.XAxis.FontSize = 20;
@@ -73,7 +73,7 @@ function[] = process_and_plot(Data_in, num_block_sizes, numiters, rows, cols, ti
             title('Intel Xeon Platinum 8462Y+', 'FontSize', 20);
         end
     else 
-        lgd=legend('ORMQR', 'GEMQRT_{nb256}', 'GEMQRT_{nb512}', 'GEMQRT_{nb1024}', 'GEMQRT_{nb2048}')
+        lgd=legend('ORMQR', 'GEMQRT n_{b}=256', 'GEMQRT n_{b}=512', 'GEMQRT n_{b}=1024', 'GEMQRT n_{b}=2048')
         lgd.FontSize = 20;
         legend('Location','northeastoutside'); 
         set(gca,'Yticklabel',[])

@@ -1,6 +1,6 @@
 function[] = bqrrp_subroutine_performance_tall_qr()
     Data_in_Intel = dlmread('../../DATA_in/2024_11_re_running_all/SapphireRapids/ICQRRP_subroutines_speed_comp_65536_col_start_256_col_stop_2048.dat');
-    Data_in_AMD   = zeros(size(Data_in_Intel));
+    Data_in_AMD   = dlmread('../../DATA_in/2024_11_re_running_all/EPYC/ICQRRP_subroutines_speed_comp_65536_col_start_256_col_stop_2048.txt');
 
     rows = 2^16;
     cols = 256;
@@ -59,7 +59,7 @@ function[] = process_and_plot(Data_in, num_block_sizes, numiters, rows, cols, ti
     semilogx(x, Data_out(:, 8), '-*', 'Color', 'magenta', "MarkerSize", 18,'LineWidth', 1.8) % GEQRT NB 2048
     xticks([ 512  2048]);
     xlim([256 2048]);
-    %ylim([0 3000]);
+    ylim([0 1.5]);
 
     ax = gca;
     ax.XAxis.FontSize = 20;

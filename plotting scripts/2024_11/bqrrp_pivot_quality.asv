@@ -1,0 +1,59 @@
+function[] = QR_sv_ratios()
+    Data_in_r_norm_small    = dlmread('../../DATA_in/2024_11_re_running_all/PivotQualityResults/QR_R_norm_ratios_rows_4096_cols_4096_b_sz_16_d_factor_1.000000.dat');
+    Data_in_sv_ratio_small  = dlmread('../../DATA_in/2024_11_re_running_all/PivotQualityResults/QR_sv_ratios_rows_4096_cols_4096_b_sz_16_d_factor_1.000000.dat');
+    Data_in_r_norm_large   = dlmread('../../DATA_in/2024_11_re_running_all/PivotQualityResults/QR_R_norm_ratios_rows_4096_cols_4096_b_sz_2048_d_factor_1.000000.dat');
+    Data_in_sv_ratio_large = dlmread('../../DATA_in/2024_11_re_running_all/PivotQualityResults/QR_sv_ratios_rows_4096_cols_4096_b_sz_2048_d_factor_1.000000.dat');
+
+    tiledlayout(2, 2,"TileSpacing","tight");
+    nexttile
+    plot_r_norm(Data_in_r_norm_small, 0, 0);
+    nexttile
+    plot_r_norm(Data_in_r_norm_large, 0, 1);
+    nexttile
+    plot_sv_ratio(Data_in_sv_ratio_small, 1, 0);
+    nexttile
+    plot_sv_ratio(Data_in_sv_ratio_large, 1, 1);
+
+end
+
+function[] = plot_sv_ratio(Data_in, col, row)
+
+    semilogy( Data_in(1, 1:4096), '', 'Color', 'red', "MarkerSize", 1.8,'LineWidth', 2.0)
+    hold on
+    semilogy( Data_in(2, 1:4096), '', 'Color', 'blue', "MarkerSize", 1.8,'LineWidth', 2.0)
+    ax = gca;
+    ax.FontSize = 20; 
+    grid on    
+    xlim([0 4096]);
+
+    %ylabel('R[k, k]/sigma[k]', 'FontSize', 20);
+    %xlabel('k', 'FontSize', 20); 
+    lgd=legend('GEQP3', 'CQRRP');
+    lgd.FontSize = 20;
+    legend('Location','northwest');
+
+    if col
+        set(gca,'Xticklabel',[])
+    end
+
+end
+
+        
+function[] = plot_r_norm(Data_in, col, row)
+    
+    semilogy( Data_in(1, 1:4096), '-o', 'Color', 'black', "MarkerSize", 1.8,'LineWidth', 2.0)
+    ax = gca;
+    ax.FontSize = 20; 
+    grid on
+    xlim([0 4096]);
+
+    %ylabel('||R_{qp3}[k+1:,:]||/||R_{cqrrp}[k+1:,:]||', 'FontSize', 15);
+    %xlabel('k', 'FontSize', 20); 
+
+    if col
+        set(gca,'Xticklabel',[])
+    end
+    if row
+        set(gca,'Yticklabel',[])
+    end
+end

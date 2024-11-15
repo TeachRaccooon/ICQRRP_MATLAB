@@ -1,8 +1,8 @@
 function[] = bqrrp_runtime_breakdown_cpu()
     Data_in_CQR_Intel = dlmread('../../DATA_in/2024_11_re_running_all/SapphireRapids/CQRRP_runtime_breakdown_65536_cols_65536_b_sz_start_256_b_sz_end_2048_d_factor_1.000000_panel_qr_cholqr.dat');
     Data_in_HQR_Intel = dlmread('../../DATA_in/2024_11_re_running_all/SapphireRapids/CQRRP_runtime_breakdown_65536_cols_65536_b_sz_start_256_b_sz_end_2048_d_factor_1.000000_panel_qr_geqrf.dat');
-    Data_in_CQR_AMD   = zeros(size(Data_in_CQR_Intel));
-    Data_in_HQR_AMD   = zeros(size(Data_in_CQR_Intel));
+    Data_in_CQR_AMD   = dlmread('../../DATA_in/2024_11_re_running_all/EPYC/CQRRP_runtime_breakdown_65536_cols_65536_b_sz_start_256_b_sz_end_2048_d_factor_1.000000_panel_qr_cholqr.txt');
+    Data_in_HQR_AMD   = dlmread('../../DATA_in/2024_11_re_running_all/EPYC/CQRRP_runtime_breakdown_65536_cols_65536_b_sz_start_256_b_sz_end_2048_d_factor_1.000000_panel_qr_geqrf.txt');
 
 
     num_block_sizes = 4;
@@ -73,7 +73,7 @@ function[] = process_and_plot(Data_in, num_block_sizes, numiters, titles, row, l
         set(gca,'Xticklabel',[])
     end
     if ~row && ~titles 
-        lgd = legend('Other','Update M', 'Reconstruct Q', 'Panel QR', 'Pivoting', 'QRCP(M^{sk})', 'Sketching');
+        lgd = legend('Other','Apply Q', 'Reconstruct Q', 'Tall QR', 'Permutation', 'QRCP(M^{sk})', 'Sketching');
         legend('Location','northeastoutside');
         if labels
             title('AMD ...', 'FontSize', 20);

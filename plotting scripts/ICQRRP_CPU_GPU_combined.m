@@ -33,7 +33,7 @@ for i = 1:28
     Data_out_gpu(i, 3) = geqrf_tflop / (Data_in_gpu(i, 6) / 10^6); %#ok<AGROW> % QRF_GPU
 end 
 
-    subplot(1, 2, 1);
+    subplot(1, 1, 1);
     x = [256 512 1024 2048];
     semilogx(x, Data_out_cpu(:, 1), '-*', 'Color', 'black', "MarkerSize", 18,'LineWidth', 1.8)
     hold on
@@ -48,6 +48,11 @@ end
     semilogx(x, Data_out_cpu(:, 6), '', 'Color', 'blue', "MarkerSize", 18,'LineWidth', 2.2)
     hold on
     semilogx(x, Data_out_cpu(:, 7), '', 'Color', 'red', "MarkerSize", 18,'LineWidth', 2.2)
+    hold on
+    buffer = -1000 * ones(28, 1);
+    y = [32, 64, 96, 128, 160, 192, 224, 256, 288, 320, 352, 384, 416, 448, 480, 512, 640, 768, 896, 1024, 1152, 1280, 1408, 1536, 1664, 1792, 1920, 2048];
+    plot(y, buffer, '-<', 'Color', '#EDB120',     "MarkerSize", 18,'LineWidth', 1.8)
+    
     xticks([256 512 1024 2048]);
     yticks([0 0.5 1 1.5]);
     xlim([256 2048]);
@@ -58,13 +63,13 @@ end
     ylabel('Tera FLOP/s', 'FontSize', 15);
     xlabel('Block size', 'FontSize', 15); 
     title('CPU algorithms');
-    %lgd=legend('ICQRRP', 'HQRRP', 'GEQRF', 'GEQP3')
+    lgd=legend('ICQRRP', 'HQRRP', 'GEQRF', 'GEQP3', 'IHQRRP')
     lgd.FontSize = 20;
     ax = gca
     ax.XAxis.FontSize = 20;
     ax.YAxis.FontSize = 20;
-
-    subplot(1, 2, 2);
+%{
+    subplot(1, 1, 1);
     x = [32, 64, 96, 128, 160, 192, 224, 256, 288, 320, 352, 384, 416, 448, 480, 512, 640, 768, 896, 1024, 1152, 1280, 1408, 1536, 1664, 1792, 1920, 2048];
     plot(x, Data_out_gpu(:, 1), '-<', 'Color', '#EDB120',   "MarkerSize", 18,'LineWidth', 1.8)
     hold on
@@ -87,13 +92,12 @@ end
 
     title('GPU algorithms');
     xlabel('Block size', 'FontSize', 15); 
-    lgd=legend('IHQRRP', 'ICQRRP', 'GEQRF', 'HQRRP', 'GEQP3')
+    %lgd=legend('IHQRRP', 'ICQRRP', 'GEQRF', 'HQRRP', 'GEQP3')
     lgd.FontSize = 20;
     ax = gca
     ax.XAxis.FontSize = 20;
     ax.YAxis.FontSize = 20;
-
-
+%}
 end
 
 

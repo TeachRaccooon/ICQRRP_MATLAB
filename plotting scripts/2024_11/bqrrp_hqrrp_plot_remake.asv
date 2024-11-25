@@ -1,20 +1,19 @@
 function[] = bqrrp_hqrrp_plot_remake()
     Data_in_AMD   = dlmread('../../Data_in/2024_11_re_running_all/EPYC/ICQRRP_time_raw_combined_AMD.txt');
-    %Data_in_Intel   = dlmread('../../Data_in/2024_11_re_running_all/SapphireRapids/ICQRRP_time_raw_combined_Intel.txt');
-    Data_in_Intel   = dlmread('../../Data_in/2024_11_re_running_all/SapphireRapids/ICQRRP_threads_time_combined.txt');
+    Data_in_Intel   = dlmread('../../Data_in/2024_11_re_running_all/SapphireRapids/ICQRRP_time_raw_combined_Intel.txt');
 
     size(Data_in_Intel)
     size(Data_in_AMD)
 
     num_mat_sizes = 9;
     num_thread_nums = 5;
-    numiters = 30;
+    numiters = 20;
 
     tiledlayout(1, 2,"TileSpacing","tight")
     nexttile
-    process_and_plot(Data_in_Intel, num_mat_sizes, num_thread_nums, 20, 0);
+    process_and_plot(Data_in_Intel, num_mat_sizes, num_thread_nums, numiters, 0);
     nexttile
-    process_and_plot(Data_in_AMD, num_mat_sizes, num_thread_nums, 15, 1);
+    process_and_plot(Data_in_AMD, num_mat_sizes, num_thread_nums, numiters, 1);
 end
 
 
@@ -41,27 +40,28 @@ function[] = process_and_plot(Data_in, num_mat_sizes, num_thread_nums, numiters,
     end
 
     x = [1000 2000 3000 4000 5000 6000 7000 8000 9000];
-    semilogy(x, Data_out(1:num_thread_nums:end, 2), '-o', 'Color', 'red', "MarkerSize", 18,'LineWidth', 1.8)   % QRF
+    semilogy(x, Data_out(1:num_thread_nums:end, 2), '-s', 'Color', 'red', "MarkerSize", 18,'LineWidth', 1.8)   % QRF
     hold on
-    semilogy(x, Data_out(1:num_thread_nums:end, 3), '-s', 'Color', 'blue', "MarkerSize", 18,'LineWidth', 1.8)  % QP3
+    semilogy(x, Data_out(1:num_thread_nums:end, 3), '-^', 'Color', 'blue', "MarkerSize", 18,'LineWidth', 1.8)  % QP3
+    holed
+    semilogy(x, Data_out(1:num_thread_nums:end, 1), '-o', 'Color', 'black', "MarkerSize", 18,'LineWidth', 1.8) % HQRRP
     hold on
-    semilogy(x, Data_out(1:num_thread_nums:end, 1), '->', 'Color', 'black', "MarkerSize", 18,'LineWidth', 1.8) % HQRRP
     hold on
-    semilogy(x, Data_out(2:num_thread_nums:end, 1), '-<', 'Color', 'black', "MarkerSize", 18,'LineWidth', 1.8) % HQRRP
+    semilogy(x, Data_out(2:num_thread_nums:end, 1), '-o', 'Color', 'black', "MarkerSize", 18,'LineWidth', 1.8) % HQRRP
     hold on
-    semilogy(x, Data_out(3:num_thread_nums:end, 1), '-^', 'Color', 'black', "MarkerSize", 18,'LineWidth', 1.8) % HQRRP
+    semilogy(x, Data_out(3:num_thread_nums:end, 1), '-o', 'Color', 'black', "MarkerSize", 18,'LineWidth', 1.8) % HQRRP
     hold on
-    semilogy(x, Data_out(4:num_thread_nums:end, 1), '-v', 'Color', 'black', "MarkerSize", 18,'LineWidth', 1.8) % HQRRP
+    semilogy(x, Data_out(4:num_thread_nums:end, 1), '-o', 'Color', 'black', "MarkerSize", 18,'LineWidth', 1.8) % HQRRP
     hold on
-    semilogy(x, Data_out(5:num_thread_nums:end, 1), '-d', 'Color', 'black', "MarkerSize", 18,'LineWidth', 1.8) % HQRRP
+    semilogy(x, Data_out(5:num_thread_nums:end, 1), '-o', 'Color', 'black', "MarkerSize", 18,'LineWidth', 1.8) % HQRRP
 
     if plot_num
-        lgd=legend('GEQRF', 'GEQP3', 'HQRRP 1', 'HQRRP 4', 'HQRRP 8', 'HQRRP 14', 'HQRRP MAX');
+        lgd=legend('HQRRP', 'GEQRF', 'GEQP3', '');
         lgd.FontSize = 20;
         legend('Location','northeastoutside');
         set(gca,'Yticklabel',[])
     end
-    ylim([0 2500]);
+    ylim([0 16000]);
     xticks([1000 3000 5000 7000 9000]);
     ax = gca;
     ax.XAxis.FontSize = 20;

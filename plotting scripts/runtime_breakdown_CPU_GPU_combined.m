@@ -1,5 +1,5 @@
 function[] = runtime_breakdown_CPU_GPU_combined()
-    tiledlayout(1, 2,"TileSpacing","tight")
+    tiledlayout(1, 1,"TileSpacing","tight")
 
     %Data_in_ICQRRP_CPU = dlmread('../DATA_in/2024_10_re_running_all/2024_10_06_EPYC-9354P/OpenMP32/CQRRP_runtime_breakdown_32768_cols_32768_b_sz_start_256_b_sz_end_1024_d_factor_1.000000.dat');
     Data_in_ICQRRP_CPU = dlmread('../DATA_in/2024_10_re_running_all/2024_10_10_CQRRP_runtime_breakdown_65536_cols_65536_b_sz_start_256_b_sz_end_2048_d_factor_1.000000.txt');
@@ -49,7 +49,7 @@ function[] = runtime_breakdown_CPU_GPU_combined()
     ax = gca;
     ax.FontSize  = 23; 
     lgd.FontSize = 23;
-%}
+
     for i = 1:size(Data_in_ICQRRP_CPU, 1)
         Data_out_ICQRRP_CPU(i, 1) = 100 * Data_in_ICQRRP_CPU(i, 1)                  /Data_in_ICQRRP_CPU(i, 12); %#ok<AGROW> % SASO
         Data_out_ICQRRP_CPU(i, 2) = 100 * Data_in_ICQRRP_CPU(i, 3)                  /Data_in_ICQRRP_CPU(i, 12); %#ok<AGROW> % QRCP
@@ -82,13 +82,13 @@ function[] = runtime_breakdown_CPU_GPU_combined()
     xlabel('Block size', 'FontSize', 23); 
     lgd = legend('Sketching','QRCP(M^{sk})', 'Precond', 'CholQR', 'Reconstruct Q', 'Update M', 'Other');
     ylabel('Runtime %', 'FontSize', 23);
-    legend('Location','southeastoutside'); 
+    legend('Location','northeastoutside'); 
     set(gca,'XTickLabel',{'256', '512', '1024', '2048'});
     ylim([0 100]);
     ax = gca;
     ax.FontSize  = 23; 
     lgd.FontSize = 23;
-
+%}
 
     for i = 1:size(Data_in_ICQRRP_GPU, 1)
         Data_out_ICQRRP_GPU(i, 1)  = 100 * (Data_in_ICQRRP_GPU(i, 4) + Data_in_ICQRRP_GPU(i, 5) + Data_in_ICQRRP_GPU(i, 6))   / Data_in_ICQRRP_GPU(i, 18); %#ok<AGROW> % QRCP
@@ -119,7 +119,7 @@ function[] = runtime_breakdown_CPU_GPU_combined()
     xlabel('Block size', 'FontSize', 23); 
     lgd = legend('QRCP(M^{sk})','Precond', 'CholQR', 'Reconstruct Q', 'Update M', 'Other');
     %ylabel('Runtime %', 'FontSize', 23);
-    legend('Location','southeastoutside'); 
+    legend('Location','northeastoutside'); 
     set(gca,'XTickLabel',{'32', '', '', '256', '', '', '2048'});
     ylim([0 100]);
     ax = gca;

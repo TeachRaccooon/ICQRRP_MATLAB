@@ -21,7 +21,7 @@ function[] = QR_speed_plot()
     x = [512 1024 2048 4096 8192];
     semilogx(x, Data_out(:, 4), '-^', 'Color', 'black', "MarkerSize", 18,'LineWidth', 1.8)
     hold on
-    semilogx(x, Data_out(:, 1), '-o', 'Color', 'blue', "MarkerSize", 18,'LineWidth', 1.8)
+    %semilogx(x, Data_out(:, 1), '-o', 'Color', 'blue', "MarkerSize", 18,'LineWidth', 1.8)
     %hold on
     %semilogx(x, Data_out(:, 2), '-*', 'Color', '#00FFFF', "MarkerSize", 18,'LineWidth', 1.8)
     hold on
@@ -33,9 +33,9 @@ function[] = QR_speed_plot()
     ax = gca;
     ax.FontSize = 15; 
     grid on
-    %ylabel('GFLOP/s', 'FontSize', 15);
-    %xlabel('Block size', 'FontSize', 15); 
-    lgd=legend('CholQR', 'QR with implicit Q', 'QR with explicit Q')
+    ylabel('GigaFLOP/s', 'FontSize', 15);
+    xlabel('columns', 'FontSize', 15); 
+    lgd=legend('CholQR', 'Standard QR')
     lgd.FontSize = 20;
     ax = gca
     ax.XAxis.FontSize = 20;
